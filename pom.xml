@@ -11,8 +11,6 @@
 
     <modules>
         <module>loanapi</module>
-        <!--        <module>testIT</module>-->
-        <!--        <module>testAT</module>-->
     </modules>
 
     <properties>
@@ -30,7 +28,7 @@
         <modelmapper.version>2.3.0</modelmapper.version>
 
         <junit.version>5.10.0</junit.version>
-        <pg-embedded.version>0.12.4</pg-embedded.version>
+        <rest.assured.version>5.5.7</rest.assured.version>
 
         <!-- Plugins -->
         <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
@@ -38,8 +36,8 @@
         <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
         <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
         <maven.jacoco.plugin.version>0.8.4</maven.jacoco.plugin.version>
-        <maven.surefire.plugin.version>3.0.0-M4</maven.surefire.plugin.version>
-        <maven.failsafe.plugin.version>3.0.0-M4</maven.failsafe.plugin.version>
+        <maven.surefire.plugin.version>3.5.4</maven.surefire.plugin.version>
+        <maven.failsafe.plugin.version>3.5.4</maven.failsafe.plugin.version>
         <maven.exec.plugin.version>1.6.0</maven.exec.plugin.version>
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
@@ -103,9 +101,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.opentable.components</groupId>
-                <artifactId>otj-pg-embedded</artifactId>
-                <version>${pg-embedded.version}</version>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${rest.assured.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -132,6 +130,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
                     <version>${maven.checkstyle.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.fa}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>

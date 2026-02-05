@@ -9,7 +9,7 @@ import java.time.OffsetDateTime;
  * Represents a Personal Loan Application object
  */
 @Entity
-@Table(name = "personal_loan_application", schema = "loans")
+@Table(name = "loans", schema = "loans")
 public class PersonalLoanApplication {
 
     @Id

@@ -1,0 +1,81 @@
+package com.cespinosab.loanapi.api.v1.controller;
+
+import com.cespinosab.loanapi.model.PersonalLoanApplication;
+import com.cespinosab.loanapi.repository.PersonalLoanApplicationRepository;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.util.List;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class PersonalLoanApplicationControllerTest {
+
+    @Autowired
+    PersonalLoanApplicationRepository personalLoanApplicationRepository;
+
+    @LocalServerPort
+    private Integer port;
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            "postgres:16-alpine"
+    );
+
+    @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+        postgres.getDatabaseName();
+
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.baseURI = "http://localhost:" + port;
+        personalLoanApplicationRepository.deleteAll();
+    }
+
+    @Test
+    void shouldGetAllCustomers() {
+        List<PersonalLoanApplication> customers = List.of(
+                new PersonalLoanApplication("Antonio", "Ruiz", "12345678-S", 1000, "EUR")
+                //new PersonalLoanApplication(null, "Dennis", "dennis@mail.com")
+        );
+        personalLoanApplicationRepository.saveAll(customers);
+
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/v1/personaApplicationLoans")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(2));
+    }
+}
