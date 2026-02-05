@@ -17,6 +17,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.io.IOException;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -32,14 +33,14 @@ public class PersonalLoanApplicationControllerTest {
     @LocalServerPort
     private Integer port;
 
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            "postgres:16-alpine"
-    );
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer("postgres:16-alpine")
+            .withDatabaseName("loans")
+            .withUsername("user")
+            .withPassword("password");
 
     @BeforeAll
     static void beforeAll() {
         postgres.start();
-        postgres.getDatabaseName();
 
     }
 
@@ -55,15 +56,15 @@ public class PersonalLoanApplicationControllerTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException, InterruptedException {
         RestAssured.baseURI = "http://localhost:" + port;
+        postgres.execInContainer("CREATE SCHEMA loans;");
         personalLoanApplicationRepository.deleteAll();
     }
 
     @Test
-    void shouldGetAllCustomers() {
+    void shouldGetAllPersonalLoanApplications() {
         List<PersonalLoanApplication> customers = List.of(
                 new PersonalLoanApplication("Antonio", "Ruiz", "12345678-S", 1000, "EUR")
                 //new PersonalLoanApplication(null, "Dennis", "dennis@mail.com")
