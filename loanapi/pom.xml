@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>loanapi</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

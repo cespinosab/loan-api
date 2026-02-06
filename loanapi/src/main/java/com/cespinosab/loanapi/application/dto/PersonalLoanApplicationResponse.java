@@ -1,8 +1,8 @@
 package com.cespinosab.loanapi.application.dto;
 
+import com.cespinosab.loanapi.application.serialization.PersonalLoanApplicationStatusSerializer;
 import com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -24,12 +24,29 @@ public class PersonalLoanApplicationResponse implements Serializable {
 
     private String badge;
 
-    @JsonDeserialize(using = JsonDeserializer.class)
+   // @JsonSerialize(using = PersonalLoanApplicationStatusSerializer.class)
     private PersonalLoanApplicationStatus status;
 
     private OffsetDateTime createdAt;
 
     private OffsetDateTime modifiedAt;
+
+    public PersonalLoanApplicationResponse() {
+    }
+
+    public PersonalLoanApplicationResponse(Long id, String firstName, String lastName, String personalId, double amount,
+                                           String badge, PersonalLoanApplicationStatus status, OffsetDateTime createdAt,
+                                           OffsetDateTime modifiedAt) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.personalId = personalId;
+        this.amount = amount;
+        this.badge = badge;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
 
     public Long getId() {
         return id;

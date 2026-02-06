@@ -1,6 +1,7 @@
 package com.cespinosab.loanapi.domain.model.enums;
 
 import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Arrays;
 
@@ -34,16 +35,15 @@ public enum PersonalLoanApplicationStatus {
      *
      * @param value String with the value to be parsed
      * @return the status associated with the value received
-     * @throws IllegalArgumentException if the value received is not valid
      */
+    @JsonValue
     public static PersonalLoanApplicationStatus parseValue(String value) {
         for (PersonalLoanApplicationStatus status : PersonalLoanApplicationStatus.values()) {
             if (status.value.equalsIgnoreCase(value)) {
                 return status;
             }
         }
-        throw new IllegalArgumentException("The value '" + value + "' is not a associated with a " +
-                "valid personal loan application status: " + Arrays.stream(PersonalLoanApplicationStatus.values()));
+        return null;
     }
 
 }
