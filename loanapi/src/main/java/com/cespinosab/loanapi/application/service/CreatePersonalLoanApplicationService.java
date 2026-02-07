@@ -4,6 +4,7 @@ import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationRequest;
 import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationResponse;
 import com.cespinosab.loanapi.application.mapper.PersonalLoanApplicationMapper;
 import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
+import com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus;
 import com.cespinosab.loanapi.infrastructure.repository.PersonalLoanApplicationRepository;
 import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,7 @@ public class CreatePersonalLoanApplicationService {
     public PersonalLoanApplicationResponse create(PersonalLoanApplicationRequest request) {
         LOG.debug("Creating personal application loan...");
         PersonalLoanApplication newPersonalLoanApplication = mapper.mapToDomain(request);
+        newPersonalLoanApplication.setStatus(PersonalLoanApplicationStatus.PENDING);
         OffsetDateTime now = OffsetDateTime.now();
         newPersonalLoanApplication.setCreatedAt(now);
         newPersonalLoanApplication.setModifiedAt(now);

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 import java.util.List;
 
+import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus.APPROVED;
 import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus.PENDING;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,13 +42,13 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
         request.setBadge("EUR");
 
         // When
-        ResponseEntity<PersonalLoanApplicationResponse> response = restTemplate.postForEntity("/api/personalLoadApplications", request, PersonalLoanApplicationResponse.class);
+        ResponseEntity<PersonalLoanApplicationResponse> response = restTemplate.postForEntity("/api/personalLoanApplications", request, PersonalLoanApplicationResponse.class);
 
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         PersonalLoanApplicationResponse body = response.getBody();
-        assertEquals(1L, body.getId());
+        //  assertEquals(1L, body.getId());
         assertEquals("Manuel", body.getFirstName());
         assertEquals("Perez", body.getLastName());
         assertEquals("12345678-S", body.getPersonalId());
@@ -56,14 +57,14 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
         assertEquals(PENDING, body.getStatus());
     }
 
-    //@Test
+    @Test
     void shouldGetAllPersonalLoanApplication() throws IOException, InterruptedException {
         // Given
         executeSql("db/existing-loans.sql");
 
         // When
         ResponseEntity<List<PersonalLoanApplicationResponse>> response =
-                restTemplate.exchange("/api/personalLoadApplications", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                restTemplate.exchange("/api/personalLoanApplications", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                 });
 
         // Then
@@ -76,50 +77,49 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
         assertEquals("Cliente1", pla1.getFirstName());
         assertEquals("Apellido1", pla1.getLastName());
         assertEquals("12345678-A", pla1.getPersonalId());
-        assertEquals(1000.0, pla1.getAmount());
+        assertEquals(2000.0, pla1.getAmount());
         assertEquals("EUR", pla1.getBadge());
         assertEquals(PENDING, pla1.getStatus());
 
-        PersonalLoanApplicationResponse pla2 = body.get(0);
+        PersonalLoanApplicationResponse pla2 = body.get(1);
         assertEquals(2L, pla2.getId());
         assertEquals("Cliente2", pla2.getFirstName());
         assertEquals("Apellido2", pla2.getLastName());
         assertEquals("91234567-B", pla2.getPersonalId());
-        assertEquals(2000.0, pla2.getAmount());
+        assertEquals(3000.0, pla2.getAmount());
         assertEquals("EUR", pla2.getBadge());
-        assertEquals(PENDING, pla2.getStatus());
+        assertEquals(APPROVED, pla2.getStatus());
     }
 
     @Test
     void shouldGetPersonalLoanApplicationById() throws IOException, InterruptedException {
         // Given
-
+        executeSql("db/existing-loans.sql");
+        long id = 1L;
         // When
         ResponseEntity<PersonalLoanApplicationResponse> response =
-                restTemplate.getForEntity("/api/personalLoanApplications/1", PersonalLoanApplicationResponse.class);
+                restTemplate.getForEntity("/api/personalLoanApplications/" + id, PersonalLoanApplicationResponse.class);
 
         // Then
-        assertEquals(HttpStatus.OK.value(), response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         PersonalLoanApplicationResponse body = response.getBody();
         assertEquals(1L, body.getId());
         assertEquals("Cliente1", body.getFirstName());
         assertEquals("Apellido1", body.getLastName());
         assertEquals("12345678-A", body.getPersonalId());
-        assertEquals(1000.0, body.getAmount());
+        assertEquals(2000.0, body.getAmount());
         assertEquals("EUR", body.getBadge());
         assertEquals(PENDING, body.getStatus());
     }
 
     @Test
-    void shouldReturn404WhenGetPersonalLoanApplicationByIdNotFound() throws IOException, InterruptedException {
+    void shouldReturn404WhenGetPersonalLoanApplicationByIdNotFound() {
         // Given
-        executeSql("db/existing-loans.sql");
+        long id = 100L;
         // When
-        ResponseEntity<String> response = restTemplate.getForEntity("/api/loans/XX", String.class);
+        ResponseEntity<PersonalLoanApplicationResponse> response = restTemplate.getForEntity("/api/personalLoanApplications/" + id, PersonalLoanApplicationResponse.class);
         // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
-
-

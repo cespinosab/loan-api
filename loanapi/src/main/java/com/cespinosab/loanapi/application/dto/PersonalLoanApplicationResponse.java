@@ -1,9 +1,6 @@
 package com.cespinosab.loanapi.application.dto;
 
-import com.cespinosab.loanapi.application.serialization.PersonalLoanApplicationStatusSerializer;
 import com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -25,7 +22,6 @@ public class PersonalLoanApplicationResponse implements Serializable {
 
     private String badge;
 
-   // @JsonSerialize(using = PersonalLoanApplicationStatusSerializer.class)
     private PersonalLoanApplicationStatus status;
 
     private OffsetDateTime createdAt;
