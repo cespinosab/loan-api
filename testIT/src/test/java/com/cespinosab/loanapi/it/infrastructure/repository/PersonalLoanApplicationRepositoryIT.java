@@ -6,6 +6,8 @@ import com.cespinosab.loanapi.it.infrastructure.BaseIT;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
+import org.testcontainers.utility.TestcontainersConfiguration;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Test suite for {@link PersonalLoanApplicationRepository}
  */
+@Import(TestcontainersConfiguration.class)
 public class PersonalLoanApplicationRepositoryIT extends BaseIT {
 
     @Autowired

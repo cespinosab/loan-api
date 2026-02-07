@@ -1,5 +1,6 @@
 package com.cespinosab.loanapi.it.infrastructure;
 
+import com.cespinosab.loanapi.LoanApiApp;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,8 +13,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
+import java.time.Duration;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = LoanApiApp.class)
 @Testcontainers
 public abstract class BaseIT {
 
@@ -44,9 +46,9 @@ public abstract class BaseIT {
     }
 
     public void executeSql(String sqlFile) throws IOException, InterruptedException {
-        postgres.copyFileToContainer(MountableFile.forClasspathResource(sqlFile), "/tmp/" +sqlFile);
+        postgres.copyFileToContainer(MountableFile.forClasspathResource(sqlFile), "/tmp/" + sqlFile);
         postgres.execInContainer(
-                "psql", "-U", postgres.getUsername(), "-d", postgres.getDatabaseName(), "-f", "/tmp/"+sqlFile);
+                "psql", "-U", postgres.getUsername(), "-d", postgres.getDatabaseName(), "-f", "/tmp/" + sqlFile);
     }
 
 }
