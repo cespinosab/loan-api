@@ -13,9 +13,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
-import java.time.Duration;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = LoanApiApp.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public abstract class BaseIT {
 
@@ -29,7 +28,7 @@ public abstract class BaseIT {
 
 
     @BeforeAll
-    static void beforeAll() throws IOException, InterruptedException {
+    static void beforeAll() {
         postgres.start();
     }
 
