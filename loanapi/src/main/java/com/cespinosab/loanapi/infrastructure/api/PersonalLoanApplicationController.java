@@ -5,7 +5,6 @@ import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationResponse;
 import com.cespinosab.loanapi.application.service.CreatePersonalLoanApplicationService;
 import com.cespinosab.loanapi.application.service.GetPersonalLoanApplicationService;
 import com.cespinosab.loanapi.application.service.UpdatePersonalLoanApplicationService;
-import com.cespinosab.loanapi.domain.exceptions.PersonalLoanApplicationNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +47,7 @@ public class PersonalLoanApplicationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PersonalLoanApplicationResponse> update(@PathVariable Long id, @RequestBody PersonalLoanApplicationRequest body) {
+    public ResponseEntity<PersonalLoanApplicationResponse> update(@PathVariable("id") Long id, @RequestBody PersonalLoanApplicationRequest body) {
         PersonalLoanApplicationResponse responseBody = updatePersonalLoanApplicationService.update(id, body);
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }

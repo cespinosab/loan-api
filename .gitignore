@@ -21,4 +21,4 @@ target/
 .vscode/
 
 *logs/
-db-data/
+db/pg-data/

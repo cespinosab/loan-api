@@ -122,4 +122,6 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
         // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    // Tests for update and create
 }
