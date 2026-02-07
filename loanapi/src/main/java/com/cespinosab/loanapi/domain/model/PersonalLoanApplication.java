@@ -32,6 +32,7 @@ public class PersonalLoanApplication {
     @Column(name = "badge", updatable = true, nullable = false)
     private String badge;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", updatable = true, nullable = false)
     private PersonalLoanApplicationStatus status;
 

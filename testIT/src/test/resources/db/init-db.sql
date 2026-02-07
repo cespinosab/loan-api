@@ -1,13 +1,13 @@
 CREATE SCHEMA IF NOT EXISTS loans;
 
 CREATE TABLE IF NOT EXISTS loans.personal_loan_application (
-    id bigserial not null primary key,
-    first_name varchar not null,
-    last_name varchar not null,
-    personal_id varchar not null,
-    amount decimal not null,
-    badge varchar not null,
-    status varchar not null,
-    created_at timestamp without time zone not null,
-    modified_at timestamp without time zone not null
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR NOT NULL,
+    last_name VARCHAR NOT NULL,
+    personal_id VARCHAR NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    badge VARCHAR NOT NULL,
+    status VARCHAR NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    modified_at TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

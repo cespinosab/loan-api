@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/personalLoadApplications", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/personalLoanApplications", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PersonalLoanApplicationController {
 
     private final GetPersonalLoanApplicationService getPersonalLoanApplicationService;

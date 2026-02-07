@@ -1,22 +1,21 @@
 package com.cespinosab.loanapi.domain.model.enums;
 
 import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.Arrays;
 
 /**
  * Status of the {@link PersonalLoanApplication}
  */
 public enum PersonalLoanApplicationStatus {
 
-    PENDING("Pendiente"),
+    PENDING("PENDIENTE"),
 
-    APPROVED("Aprobada"),
+    APPROVED("APROBADA"),
 
-    REJECTED("Rechazada"),
+    REJECTED("RECHAZADA"),
 
-    CANCELLED("Cancelada");
+    CANCELLED("CANCELADA");
 
 
     private final String value;
@@ -30,13 +29,18 @@ public enum PersonalLoanApplicationStatus {
         this.value = value;
     }
 
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
+
     /**
      * Parse a value from a String to a PersonalLoanApplicationStatus
      *
      * @param value String with the value to be parsed
      * @return the status associated with the value received
      */
-    @JsonValue
+    @JsonCreator
     public static PersonalLoanApplicationStatus parseValue(String value) {
         for (PersonalLoanApplicationStatus status : PersonalLoanApplicationStatus.values()) {
             if (status.value.equalsIgnoreCase(value)) {

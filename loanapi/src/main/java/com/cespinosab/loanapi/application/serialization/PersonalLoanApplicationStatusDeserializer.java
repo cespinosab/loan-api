@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 
-public class PersonalLoanApplicationStatusDeserializer  extends JsonDeserializer<PersonalLoanApplicationStatus> {
+public class PersonalLoanApplicationStatusDeserializer extends JsonDeserializer<PersonalLoanApplicationStatus> {
 
-        @Override
-        public PersonalLoanApplicationStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-            String value = p.getText();
-            return PersonalLoanApplicationStatus.parseValue(value);
-        }
+    @Override
+    public PersonalLoanApplicationStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        String value = p.getText().trim().toUpperCase();
+        return PersonalLoanApplicationStatus.parseValue(value);
+    }
 
 }

@@ -12,15 +12,16 @@ public class PersonalLoanApplicationMapper {
     private final ModelMapper modelMapper = new ModelMapper();
 
     public PersonalLoanApplicationMapper() {
-        modelMapper.typeMap(PersonalLoanApplicationRequest.class, PersonalLoanApplication.class);
     }
 
     public PersonalLoanApplicationResponse mapFromDomain(PersonalLoanApplication personalLoanApplication) {
+        //  modelMapper.typeMap(PersonalLoanApplication.class, PersonalLoanApplicationResponse.class);
         return modelMapper.map(personalLoanApplication, PersonalLoanApplicationResponse.class);
     }
 
-    public PersonalLoanApplication mapToDomain(PersonalLoanApplicationRequest request){
-       return modelMapper.map(request, PersonalLoanApplication.class);
+    public PersonalLoanApplication mapToDomain(PersonalLoanApplicationRequest request) {
+        //  modelMapper.typeMap(PersonalLoanApplicationRequest.class, PersonalLoanApplication.class);
+        return modelMapper.map(request, PersonalLoanApplication.class);
     }
 
 }
