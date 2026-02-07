@@ -51,7 +51,7 @@ public class PersonalLoanApplicationRepositoryIT extends BaseIT {
         assertEquals("Cliente2", result.get().getFirstName());
         assertEquals("Apellido2", result.get().getLastName());
         assertEquals("91234567-B", result.get().getPersonalId());
-        assertEquals(3000.0, result.get().getAmount());git
+        assertEquals(3000.0, result.get().getAmount());
         assertEquals("EUR", result.get().getBadge());
         assertEquals(APPROVED, result.get().getStatus());
     }
