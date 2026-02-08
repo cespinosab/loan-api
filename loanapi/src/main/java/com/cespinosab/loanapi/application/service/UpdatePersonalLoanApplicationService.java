@@ -77,7 +77,7 @@ public class UpdatePersonalLoanApplicationService {
      * @param targetStatus target status to check if it is valid
      * @return true if the targetStatus is valid; otherwise, false
      */
-    private boolean isValidStatusChange(PersonalLoanApplicationStatus originStatus, PersonalLoanApplicationStatus targetStatus) {
+    public boolean isValidStatusChange(PersonalLoanApplicationStatus originStatus, PersonalLoanApplicationStatus targetStatus) {
         return switch (originStatus) {
             case PENDING -> Arrays.asList(APPROVED, REJECTED).contains(targetStatus);
             case APPROVED -> CANCELLED == targetStatus;
