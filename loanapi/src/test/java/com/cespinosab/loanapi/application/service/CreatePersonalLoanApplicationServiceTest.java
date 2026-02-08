@@ -18,6 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+/**
+ * Test suite for {@link CreatePersonalLoanApplicationService}
+ */
 @ExtendWith(MockitoExtension.class)
 public class CreatePersonalLoanApplicationServiceTest {
 
@@ -34,7 +37,6 @@ public class CreatePersonalLoanApplicationServiceTest {
     public void createTest() {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
-
         PersonalLoanApplication expectedPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");;
         when(mapperMock.mapToDomain(any())).thenReturn(expectedPla);
 

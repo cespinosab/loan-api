@@ -117,6 +117,7 @@ La implementación se organiza en paquetes para proteger la lógica de negocio d
  para que no se ejecute el verdadero método. 
 - Añadir un nuevo módulo testAT que use Cucumber para tener pruebas E2E completas usando Cucumber, 
 - Hacer que le servicio esté securizado usando HTTPS
+- Añadir una lista de divisas válidas y que no sea un string
 - Incluir validaciones relacionadas con la entrada de campos
 - Mejorar la gestión de errores cuando no hay datos, no se puede actualizar una solicitud
 - Añadir gestión de usuarios
