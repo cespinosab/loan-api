@@ -20,7 +20,7 @@ import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationS
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Test suite for {@link GetPersonalLoanApplicationService}
@@ -42,52 +42,56 @@ public class GetPersonalLoanApplicationServiceTest {
     public void getAllTest() {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
-        PersonalLoanApplication expectedPla1 = new PersonalLoanApplication("Cliente1", "Apellido1", "12345678-A", 1000, "EUR");
-        expectedPla1.setId(1L);
-        expectedPla1.setStatus(APPROVED);
-        expectedPla1.setCreatedAt(now);
-        expectedPla1.setModifiedAt(now);
-        PersonalLoanApplication expectedPla2 = new PersonalLoanApplication("Cliente2", "Apellido2", "98765432-B", 20000, "EUR");
-        expectedPla2.setId(2L);
-        expectedPla2.setStatus(PENDING);
-        expectedPla2.setCreatedAt(now);
-        expectedPla2.setModifiedAt(now);
+        PersonalLoanApplication plaMock1 = new PersonalLoanApplication("Cliente1", "Apellido1", "12345678-A", 1000, "EUR");
+        plaMock1.setId(1L);
+        plaMock1.setStatus(APPROVED);
+        plaMock1.setCreatedAt(now);
+        plaMock1.setModifiedAt(now);
+        PersonalLoanApplication plaMock2 = new PersonalLoanApplication("Cliente2", "Apellido2", "98765432-B", 20000, "EUR");
+        plaMock2.setId(2L);
+        plaMock2.setStatus(PENDING);
+        plaMock2.setCreatedAt(now);
+        plaMock2.setModifiedAt(now);
 
-        when(repositoryMock.findAll()).thenReturn(List.of(expectedPla1, expectedPla2));
+        when(repositoryMock.findAll()).thenReturn(List.of(plaMock1, plaMock2));
 
-        PersonalLoanApplicationResponse expectedResponse1 = new PersonalLoanApplicationResponse();
-        expectedResponse1.setId(1L);
-        expectedResponse1.setFirstName("Cliente1");
-        expectedResponse1.setLastName("Apellido1");
-        expectedResponse1.setPersonalId("12345678-A");
-        expectedResponse1.setAmount(1000);
-        expectedResponse1.setBadge("EUR");
-        expectedResponse1.setStatus(PENDING);
-        expectedResponse1.setCreatedAt(now);
-        expectedResponse1.setModifiedAt(now);
+        PersonalLoanApplicationResponse responseMock1 = new PersonalLoanApplicationResponse();
+        responseMock1.setId(1L);
+        responseMock1.setFirstName("Cliente1");
+        responseMock1.setLastName("Apellido1");
+        responseMock1.setPersonalId("12345678-A");
+        responseMock1.setAmount(1000);
+        responseMock1.setBadge("EUR");
+        responseMock1.setStatus(PENDING);
+        responseMock1.setCreatedAt(now);
+        responseMock1.setModifiedAt(now);
 
-        PersonalLoanApplicationResponse expectedResponse2 = new PersonalLoanApplicationResponse();
-        expectedResponse2.setId(2L);
-        expectedResponse2.setFirstName("Cliente2");
-        expectedResponse2.setLastName("Apellido2");
-        expectedResponse2.setPersonalId("98765432-B");
-        expectedResponse2.setAmount(20000);
-        expectedResponse2.setBadge("EUR");
-        expectedResponse2.setStatus(APPROVED);
-        expectedResponse2.setCreatedAt(now);
-        expectedResponse2.setModifiedAt(now);
+        PersonalLoanApplicationResponse responseMock2 = new PersonalLoanApplicationResponse();
+        responseMock2.setId(2L);
+        responseMock2.setFirstName("Cliente2");
+        responseMock2.setLastName("Apellido2");
+        responseMock2.setPersonalId("98765432-B");
+        responseMock2.setAmount(20000);
+        responseMock2.setBadge("EUR");
+        responseMock2.setStatus(APPROVED);
+        responseMock2.setCreatedAt(now);
+        responseMock2.setModifiedAt(now);
 
         when(mapperMock.mapFromDomain(any()))
-                .thenReturn(expectedResponse1)
-                .thenReturn(expectedResponse2);
+                .thenReturn(responseMock1)
+                .thenReturn(responseMock2);
 
         // When
         List<PersonalLoanApplicationResponse> result = getPersonalLoanApplicationService.getAll();
 
         // Then
         assertEquals(2, result.size());
-        assertEquals(expectedResponse1, result.get(0));
-        assertEquals(expectedResponse2, result.get(1));
+        assertEquals(responseMock1, result.get(0));
+        assertEquals(responseMock2, result.get(1));
+
+        verify(repositoryMock).findAll();
+        verify(mapperMock, times(2)).mapFromDomain(any());
+        verifyNoMoreInteractions(mapperMock, repositoryMock);
     }
 
 
@@ -95,31 +99,33 @@ public class GetPersonalLoanApplicationServiceTest {
     public void getByIdTest() {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
-        PersonalLoanApplication expectedPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        expectedPla.setId(1L);
-        expectedPla.setStatus(APPROVED);
-        expectedPla.setCreatedAt(now);
-        expectedPla.setModifiedAt(now);
+        PersonalLoanApplication plaMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        plaMock.setId(1L);
+        plaMock.setStatus(APPROVED);
+        plaMock.setCreatedAt(now);
+        plaMock.setModifiedAt(now);
+        when(repositoryMock.findById(any())).thenReturn(Optional.of(plaMock));
 
-        when(repositoryMock.findById(any())).thenReturn(Optional.of(expectedPla));
+        PersonalLoanApplicationResponse responseMock = new PersonalLoanApplicationResponse();
+        responseMock.setId(1L);
+        responseMock.setFirstName("Cliente1");
+        responseMock.setLastName("Apellido1");
+        responseMock.setPersonalId("12345678-A");
+        responseMock.setAmount(1000);
+        responseMock.setBadge("EUR");
+        responseMock.setStatus(PENDING);
+        responseMock.setCreatedAt(now);
+        responseMock.setModifiedAt(now);
 
-        PersonalLoanApplicationResponse expectedResponse = new PersonalLoanApplicationResponse();
-        expectedResponse.setId(1L);
-        expectedResponse.setFirstName("Cliente1");
-        expectedResponse.setLastName("Apellido1");
-        expectedResponse.setPersonalId("12345678-A");
-        expectedResponse.setAmount(1000);
-        expectedResponse.setBadge("EUR");
-        expectedResponse.setStatus(PENDING);
-        expectedResponse.setCreatedAt(now);
-        expectedResponse.setModifiedAt(now);
-
-        when(mapperMock.mapFromDomain(any())).thenReturn(expectedResponse);
+        when(mapperMock.mapFromDomain(any())).thenReturn(responseMock);
         // When
         PersonalLoanApplicationResponse result = getPersonalLoanApplicationService.getById(1L);
 
         // Then
-        assertEquals(expectedResponse, result);
+        assertEquals(responseMock, result);
+        verify(repositoryMock).findById(1L);
+        verify(mapperMock).mapFromDomain(any());
+        verifyNoMoreInteractions(mapperMock, repositoryMock);
     }
 
     @Test

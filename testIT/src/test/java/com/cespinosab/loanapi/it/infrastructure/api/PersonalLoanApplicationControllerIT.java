@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +30,7 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
 
     @Test
     @Transactional
-    void shouldCreatePersonalLoanApplication() {
+    void shouldCreatePersonalLoanApplicationIT() {
         // Given
         PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
         request.setFirstName("Manuel");
@@ -42,7 +40,10 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
         request.setBadge("EUR");
 
         // When
-        ResponseEntity<PersonalLoanApplicationResponse> response = restTemplate.postForEntity("/api/personalLoanApplications", request, PersonalLoanApplicationResponse.class);
+        ResponseEntity<PersonalLoanApplicationResponse> response =
+                restTemplate.postForEntity("/api/personalLoanApplications",
+                        request,
+                        PersonalLoanApplicationResponse.class);
 
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -58,14 +59,16 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
     }
 
     @Test
-    void shouldGetAllPersonalLoanApplication() throws IOException, InterruptedException {
+    void shouldGetAllPersonalLoanApplicationIT() throws IOException, InterruptedException {
         // Given
         executeSql("db/existing-loans.sql");
 
         // When
         ResponseEntity<List<PersonalLoanApplicationResponse>> response =
-                restTemplate.exchange("/api/personalLoanApplications", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-                });
+                restTemplate.exchange("/api/personalLoanApplications",
+                        HttpMethod.GET, null,
+                        new ParameterizedTypeReference<>() {
+                        });
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -92,13 +95,14 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
     }
 
     @Test
-    void shouldGetPersonalLoanApplicationById() throws IOException, InterruptedException {
+    void shouldGetPersonalLoanApplicationByIdIT() throws IOException, InterruptedException {
         // Given
         executeSql("db/existing-loans.sql");
         long id = 1L;
         // When
         ResponseEntity<PersonalLoanApplicationResponse> response =
-                restTemplate.getForEntity("/api/personalLoanApplications/" + id, PersonalLoanApplicationResponse.class);
+                restTemplate.getForEntity("/api/personalLoanApplications/" + id,
+                        PersonalLoanApplicationResponse.class);
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -118,10 +122,47 @@ public class PersonalLoanApplicationControllerIT extends BaseIT {
         // Given
         long id = 100L;
         // When
-        ResponseEntity<PersonalLoanApplicationResponse> response = restTemplate.getForEntity("/api/personalLoanApplications/" + id, PersonalLoanApplicationResponse.class);
+        ResponseEntity<PersonalLoanApplicationResponse> response =
+                restTemplate.getForEntity("/api/personalLoanApplications/" + id,
+                        PersonalLoanApplicationResponse.class);
         // Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    // Tests for update and create
+    @Test
+    void shouldUpdatePersonalLoanApplicationIT() throws IOException, InterruptedException {
+        // Given
+        executeSql("db/existing-loans.sql");
+        long id = 2L;
+
+        PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
+        request.setFirstName("Carmen");
+        request.setLastName("Martin");
+        request.setPersonalId("12345678-B");
+        request.setAmount(10000);
+        request.setBadge("EUR");
+
+        // When
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ResponseEntity<PersonalLoanApplicationResponse> response =
+                restTemplate.exchange("/api/personalLoanApplications/" + id,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(request, headers),
+                        PersonalLoanApplicationResponse.class
+                );
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        PersonalLoanApplicationResponse body = response.getBody();
+        assertEquals(2L, body.getId());
+        assertEquals("Carmen", body.getFirstName());
+        assertEquals("Martin", body.getLastName());
+        assertEquals("12345678-B", body.getPersonalId());
+        assertEquals(10000, body.getAmount());
+        assertEquals("EUR", body.getBadge());
+        assertEquals(APPROVED, body.getStatus());
+    }
 }

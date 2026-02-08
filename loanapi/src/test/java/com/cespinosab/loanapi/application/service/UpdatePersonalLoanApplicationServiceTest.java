@@ -42,37 +42,37 @@ public class UpdatePersonalLoanApplicationServiceTest {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
 
-        PersonalLoanApplication requestPlaToUpdate = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        requestPlaToUpdate.setAmount(5000);
-        requestPlaToUpdate.setStatus(APPROVED);
-        when(mapperMock.mapToDomain(any())).thenReturn(requestPlaToUpdate);
+        PersonalLoanApplication requestPlaToUpdateMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        requestPlaToUpdateMock.setAmount(5000);
+        requestPlaToUpdateMock.setStatus(APPROVED);
+        when(mapperMock.mapToDomain(any())).thenReturn(requestPlaToUpdateMock);
 
-        PersonalLoanApplication existingPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        existingPla.setId(1L);
-        existingPla.setStatus(PENDING);
-        existingPla.setModifiedAt(now.minusDays(1));
-        existingPla.setModifiedAt(now.minusDays(1));
-        when(repositoryMock.findById(any())).thenReturn(Optional.of(existingPla));
+        PersonalLoanApplication existingPlaMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        existingPlaMock.setId(1L);
+        existingPlaMock.setStatus(PENDING);
+        existingPlaMock.setModifiedAt(now.minusDays(1));
+        existingPlaMock.setModifiedAt(now.minusDays(1));
+        when(repositoryMock.findById(any())).thenReturn(Optional.of(existingPlaMock));
 
         doReturn(true).when(updatePersonalLoanApplicationService).isValidStatusChange(any(PersonalLoanApplicationStatus.class),any(PersonalLoanApplicationStatus.class));
 
-        PersonalLoanApplication expectedUpdatedPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 5000, "EUR");
-        existingPla.setId(1L);
-        existingPla.setStatus(APPROVED);
-        existingPla.setModifiedAt(now);
-        when(repositoryMock.save(any())).thenReturn(expectedUpdatedPla);
+        PersonalLoanApplication updatedPlaMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 5000, "EUR");
+        existingPlaMock.setId(1L);
+        existingPlaMock.setStatus(APPROVED);
+        existingPlaMock.setModifiedAt(now);
+        when(repositoryMock.save(any())).thenReturn(updatedPlaMock);
 
-        PersonalLoanApplicationResponse expectedResponse = new PersonalLoanApplicationResponse();
-        expectedResponse.setId(1L);
-        expectedResponse.setFirstName("Cliente");
-        expectedResponse.setLastName("Apellido");
-        expectedResponse.setPersonalId("12345678-A");
-        expectedResponse.setAmount(5000);
-        expectedResponse.setBadge("EUR");
-        expectedResponse.setStatus(APPROVED);
-        expectedResponse.setCreatedAt(now);
-        expectedResponse.setModifiedAt(now);
-        when(mapperMock.mapFromDomain(any())).thenReturn(expectedResponse);
+        PersonalLoanApplicationResponse responseMock = new PersonalLoanApplicationResponse();
+        responseMock.setId(1L);
+        responseMock.setFirstName("Cliente");
+        responseMock.setLastName("Apellido");
+        responseMock.setPersonalId("12345678-A");
+        responseMock.setAmount(5000);
+        responseMock.setBadge("EUR");
+        responseMock.setStatus(APPROVED);
+        responseMock.setCreatedAt(now);
+        responseMock.setModifiedAt(now);
+        when(mapperMock.mapFromDomain(any())).thenReturn(responseMock);
 
         // When
         PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
@@ -86,8 +86,7 @@ public class UpdatePersonalLoanApplicationServiceTest {
         PersonalLoanApplicationResponse result = updatePersonalLoanApplicationService.update(1L, request);
 
         // Then
-        assertEquals(expectedResponse, result);
-
+        assertEquals(responseMock, result);
         verify(mapperMock).mapToDomain(any());
         verify(repositoryMock).findById(1L);
         verify(updatePersonalLoanApplicationService).isValidStatusChange(any(PersonalLoanApplicationStatus.class), any(PersonalLoanApplicationStatus.class));
@@ -102,37 +101,37 @@ public class UpdatePersonalLoanApplicationServiceTest {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
 
-        PersonalLoanApplication requestPlaToUpdate = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        requestPlaToUpdate.setAmount(5000);
-        requestPlaToUpdate.setStatus(APPROVED);
-        when(mapperMock.mapToDomain(any())).thenReturn(requestPlaToUpdate);
+        PersonalLoanApplication requestPlaToUpdateMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        requestPlaToUpdateMock.setAmount(5000);
+        requestPlaToUpdateMock.setStatus(APPROVED);
+        when(mapperMock.mapToDomain(any())).thenReturn(requestPlaToUpdateMock);
 
-        PersonalLoanApplication existingPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        existingPla.setId(1L);
-        existingPla.setStatus(CANCELLED);
-        existingPla.setModifiedAt(now.minusDays(1));
-        existingPla.setModifiedAt(now.minusDays(1));
-        when(repositoryMock.findById(any())).thenReturn(Optional.of(existingPla));
+        PersonalLoanApplication existingPlaMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        existingPlaMock.setId(1L);
+        existingPlaMock.setStatus(CANCELLED);
+        existingPlaMock.setModifiedAt(now.minusDays(1));
+        existingPlaMock.setModifiedAt(now.minusDays(1));
+        when(repositoryMock.findById(any())).thenReturn(Optional.of(existingPlaMock));
 
         doReturn(false).when(updatePersonalLoanApplicationService).isValidStatusChange(any(PersonalLoanApplicationStatus.class),any(PersonalLoanApplicationStatus.class));
 
-        PersonalLoanApplication expectedUpdatedPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 5000, "EUR");
-        existingPla.setId(1L);
-        existingPla.setStatus(CANCELLED);
-        existingPla.setModifiedAt(now);
-        when(repositoryMock.save(any())).thenReturn(expectedUpdatedPla);
+        PersonalLoanApplication updatedPlaMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 5000, "EUR");
+        existingPlaMock.setId(1L);
+        existingPlaMock.setStatus(CANCELLED);
+        existingPlaMock.setModifiedAt(now);
+        when(repositoryMock.save(any())).thenReturn(updatedPlaMock);
 
-        PersonalLoanApplicationResponse expectedResponse = new PersonalLoanApplicationResponse();
-        expectedResponse.setId(1L);
-        expectedResponse.setFirstName("Cliente");
-        expectedResponse.setLastName("Apellido");
-        expectedResponse.setPersonalId("12345678-A");
-        expectedResponse.setAmount(5000);
-        expectedResponse.setBadge("EUR");
-        expectedResponse.setStatus(CANCELLED);
-        expectedResponse.setCreatedAt(now);
-        expectedResponse.setModifiedAt(now);
-        when(mapperMock.mapFromDomain(any())).thenReturn(expectedResponse);
+        PersonalLoanApplicationResponse responseMock = new PersonalLoanApplicationResponse();
+        responseMock.setId(1L);
+        responseMock.setFirstName("Cliente");
+        responseMock.setLastName("Apellido");
+        responseMock.setPersonalId("12345678-A");
+        responseMock.setAmount(5000);
+        responseMock.setBadge("EUR");
+        responseMock.setStatus(CANCELLED);
+        responseMock.setCreatedAt(now);
+        responseMock.setModifiedAt(now);
+        when(mapperMock.mapFromDomain(any())).thenReturn(responseMock);
 
         // When
         PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
@@ -146,7 +145,7 @@ public class UpdatePersonalLoanApplicationServiceTest {
         PersonalLoanApplicationResponse result = updatePersonalLoanApplicationService.update(1L, request);
 
         // Then
-        assertEquals(expectedResponse, result);
+        assertEquals(responseMock, result);
 
         verify(mapperMock).mapToDomain(any());
         verify(repositoryMock).findById(1L);
@@ -161,24 +160,24 @@ public class UpdatePersonalLoanApplicationServiceTest {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
 
-        PersonalLoanApplication requestPlaToUpdate = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        requestPlaToUpdate.setAmount(5000);
-        requestPlaToUpdate.setStatus(PENDING);
-        when(mapperMock.mapToDomain(any())).thenReturn(requestPlaToUpdate);
+        PersonalLoanApplication requestPlaToUpdateMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        requestPlaToUpdateMock.setAmount(5000);
+        requestPlaToUpdateMock.setStatus(PENDING);
+        when(mapperMock.mapToDomain(any())).thenReturn(requestPlaToUpdateMock);
 
         when(repositoryMock.findById(any())).thenReturn(Optional.empty());
 
-        PersonalLoanApplicationResponse expectedResponse = new PersonalLoanApplicationResponse();
-        expectedResponse.setId(1L);
-        expectedResponse.setFirstName("Cliente");
-        expectedResponse.setLastName("Apellido");
-        expectedResponse.setPersonalId("12345678-A");
-        expectedResponse.setAmount(5000);
-        expectedResponse.setBadge("EUR");
-        expectedResponse.setStatus(PENDING);
-        expectedResponse.setCreatedAt(now);
-        expectedResponse.setModifiedAt(now);
-        when(mapperMock.mapFromDomain(any())).thenReturn(expectedResponse);
+        PersonalLoanApplicationResponse responseMock = new PersonalLoanApplicationResponse();
+        responseMock.setId(1L);
+        responseMock.setFirstName("Cliente");
+        responseMock.setLastName("Apellido");
+        responseMock.setPersonalId("12345678-A");
+        responseMock.setAmount(5000);
+        responseMock.setBadge("EUR");
+        responseMock.setStatus(PENDING);
+        responseMock.setCreatedAt(now);
+        responseMock.setModifiedAt(now);
+        when(mapperMock.mapFromDomain(any())).thenReturn(responseMock);
 
         // When
         PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
@@ -192,7 +191,7 @@ public class UpdatePersonalLoanApplicationServiceTest {
         PersonalLoanApplicationResponse result = updatePersonalLoanApplicationService.update(1L, request);
 
         // Then
-        assertEquals(expectedResponse, result);
+        assertEquals(responseMock, result);
         verify(mapperMock).mapToDomain(any());
         verify(repositoryMock).findById(1L);
         verify(repositoryMock).save(any());

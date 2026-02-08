@@ -5,18 +5,16 @@ import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationResponse;
 import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PersonalLoanApplicationMapper {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    public PersonalLoanApplicationMapper() {
-        this.modelMapper=new ModelMapper();
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.STRICT)
-                .setSkipNullEnabled(true);
+    public PersonalLoanApplicationMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
     }
 
     public PersonalLoanApplicationResponse mapFromDomain(PersonalLoanApplication personalLoanApplication) {

@@ -4,6 +4,7 @@ import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationRequest;
 import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationResponse;
 import com.cespinosab.loanapi.application.mapper.PersonalLoanApplicationMapper;
 import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
+import com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus;
 import com.cespinosab.loanapi.infrastructure.repository.PersonalLoanApplicationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +17,7 @@ import java.time.OffsetDateTime;
 import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus.PENDING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Test suite for {@link CreatePersonalLoanApplicationService}
@@ -37,24 +38,24 @@ public class CreatePersonalLoanApplicationServiceTest {
     public void createTest() {
         // Given
         OffsetDateTime now = OffsetDateTime.now();
-        PersonalLoanApplication expectedPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");;
-        when(mapperMock.mapToDomain(any())).thenReturn(expectedPla);
+        PersonalLoanApplication mockPla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");;
+        when(mapperMock.mapToDomain(any())).thenReturn(mockPla);
 
-        expectedPla.setId(1L);
-        when(repositoryMock.save(any())).thenReturn(expectedPla);
+        mockPla.setId(1L);
+        when(repositoryMock.save(any())).thenReturn(mockPla);
 
-        PersonalLoanApplicationResponse expectedResponse = new PersonalLoanApplicationResponse();
-        expectedResponse.setId(1L);
-        expectedResponse.setFirstName("Cliente");
-        expectedResponse.setLastName("Apellido");
-        expectedResponse.setPersonalId("12345678-A");
-        expectedResponse.setAmount(1000);
-        expectedResponse.setBadge("EUR");
-        expectedResponse.setStatus(PENDING);
-        expectedResponse.setCreatedAt(now);
-        expectedResponse.setModifiedAt(now);
+        PersonalLoanApplicationResponse mockResponse = new PersonalLoanApplicationResponse();
+        mockResponse.setId(1L);
+        mockResponse.setFirstName("Cliente");
+        mockResponse.setLastName("Apellido");
+        mockResponse.setPersonalId("12345678-A");
+        mockResponse.setAmount(1000);
+        mockResponse.setBadge("EUR");
+        mockResponse.setStatus(PENDING);
+        mockResponse.setCreatedAt(now);
+        mockResponse.setModifiedAt(now);
 
-        when(mapperMock.mapFromDomain(any())).thenReturn(expectedResponse);
+        when(mapperMock.mapFromDomain(any())).thenReturn(mockResponse);
 
         // When
         PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
@@ -67,7 +68,12 @@ public class CreatePersonalLoanApplicationServiceTest {
         PersonalLoanApplicationResponse result = createPersonalLoanApplicationService.create(request);
 
         // Then
-        assertEquals(expectedResponse, result);
+        assertEquals(mockResponse, result);
+
+        verify(mapperMock).mapToDomain(any());
+        verify(repositoryMock).save(any());
+        verify(mapperMock).mapFromDomain(any());
+        verifyNoMoreInteractions(mapperMock, repositoryMock);
     }
 
 }

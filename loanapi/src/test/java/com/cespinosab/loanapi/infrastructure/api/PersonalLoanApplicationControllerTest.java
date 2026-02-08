@@ -1,75 +1,140 @@
 package com.cespinosab.loanapi.infrastructure.api;
 
-import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
-import com.cespinosab.loanapi.infrastructure.repository.PersonalLoanApplicationRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationRequest;
+import com.cespinosab.loanapi.application.dto.PersonalLoanApplicationResponse;
+import com.cespinosab.loanapi.application.service.CreatePersonalLoanApplicationService;
+import com.cespinosab.loanapi.application.service.GetPersonalLoanApplicationService;
+import com.cespinosab.loanapi.application.service.UpdatePersonalLoanApplicationService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
 import java.util.List;
 
+import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus.APPROVED;
+import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus.PENDING;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+/**
+ * Test suite for {@link PersonalLoanApplicationController}
+ */
+@ExtendWith(MockitoExtension.class)
 public class PersonalLoanApplicationControllerTest {
 
-    @Autowired
-    PersonalLoanApplicationRepository personalLoanApplicationRepository;
+    @Mock
+    private GetPersonalLoanApplicationService getPersonalLoanApplicationServiceMock;
 
-    @LocalServerPort
-    private Integer port;
+    @Mock
+    private CreatePersonalLoanApplicationService createPersonalLoanApplicationServiceMock;
 
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer("postgres:16-alpine")
-            .withDatabaseName("loans")
-            .withUsername("user")
-            .withPassword("password");
+    @Mock
+    private UpdatePersonalLoanApplicationService updatePersonalLoanApplicationServiceMock;
 
-    @BeforeAll
-    static void beforeAll() {
-        postgres.start();
+    @InjectMocks
+    private PersonalLoanApplicationController personalLoanApplicationController;
 
-    }
+    @Test
+    public void getAllTest() {
+        // Given
+        PersonalLoanApplicationResponse plaResponse1 = new PersonalLoanApplicationResponse();
+        plaResponse1.setId(1L);
+        plaResponse1.setFirstName("Cliente1");
+        plaResponse1.setLastName("Apellido1");
+        plaResponse1.setStatus(PENDING);
 
-    @AfterAll
-    static void afterAll() {
-        postgres.stop();
-    }
+        PersonalLoanApplicationResponse plaResponse2 = new PersonalLoanApplicationResponse();
+        plaResponse2.setId(2L);
+        plaResponse2.setFirstName("Cliente2");
+        plaResponse2.setLastName("Apellido2");
+        plaResponse2.setStatus(APPROVED);
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+        when(getPersonalLoanApplicationServiceMock.getAll()).thenReturn(List.of(plaResponse1, plaResponse2));
 
-    @BeforeEach
-    void setUp() throws IOException, InterruptedException {
-    //    RestAssured.baseURI = "http://localhost:" + port;
-        postgres.execInContainer("CREATE SCHEMA loans;");
-        personalLoanApplicationRepository.deleteAll();
+        // When
+        ResponseEntity<List<PersonalLoanApplicationResponse>> response = personalLoanApplicationController.getAll();
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(List.of(plaResponse1, plaResponse2), response.getBody());
+        verify(getPersonalLoanApplicationServiceMock).getAll();
+        verifyNoMoreInteractions(getPersonalLoanApplicationServiceMock);
     }
 
     @Test
-    void shouldGetAllPersonalLoanApplications() {
-        List<PersonalLoanApplication> customers = List.of(
-                new PersonalLoanApplication("Antonio", "Ruiz", "12345678-S", 1000, "EUR")
-                //new PersonalLoanApplication(null, "Dennis", "dennis@mail.com")
-        );
-        personalLoanApplicationRepository.saveAll(customers);
+    public void getByIdTest() {
+        // Given
+        PersonalLoanApplicationResponse plaResponseMock = new PersonalLoanApplicationResponse();
+        plaResponseMock.setId(1L);
+        plaResponseMock.setFirstName("Cliente1");
+        plaResponseMock.setLastName("Apellido1");
+        plaResponseMock.setStatus(PENDING);
+        when(getPersonalLoanApplicationServiceMock.getById(any())).thenReturn(plaResponseMock);
 
-     /*   given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/v1/personaApplicationLoans")
-                .then()
-                .statusCode(200)
-                .body(".", hasSize(2));*/
+        // When
+        ResponseEntity<PersonalLoanApplicationResponse> response = personalLoanApplicationController.getById(1L);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(plaResponseMock, response.getBody());
+        verify(getPersonalLoanApplicationServiceMock).getById(any());
+        verifyNoMoreInteractions(getPersonalLoanApplicationServiceMock);
+    }
+
+    @Test
+    public void createTest() {
+        // Given
+        PersonalLoanApplicationResponse plaResponseMock = new PersonalLoanApplicationResponse();
+        plaResponseMock.setId(1L);
+        plaResponseMock.setFirstName("Cliente1");
+        plaResponseMock.setLastName("Apellido1");
+        plaResponseMock.setStatus(PENDING);
+        plaResponseMock.setAmount(1000);
+        when(createPersonalLoanApplicationServiceMock.create(any())).thenReturn(plaResponseMock);
+
+        // When
+        PersonalLoanApplicationRequest plaRequest = new PersonalLoanApplicationRequest();
+        plaRequest.setFirstName("Cliente1");
+        plaRequest.setLastName("Apellido1");
+        plaRequest.setAmount(1000);
+
+        ResponseEntity<PersonalLoanApplicationResponse> response = personalLoanApplicationController.create(plaRequest);
+
+        // Then
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(plaResponseMock, response.getBody());
+        verify(createPersonalLoanApplicationServiceMock).create(any());
+        verifyNoMoreInteractions(createPersonalLoanApplicationServiceMock);
+    }
+
+    @Test
+    public void updateTest() {
+        // Given
+        PersonalLoanApplicationResponse plaResponseMock = new PersonalLoanApplicationResponse();
+        plaResponseMock.setId(1L);
+        plaResponseMock.setFirstName("Cliente1");
+        plaResponseMock.setLastName("Apellido1");
+        plaResponseMock.setStatus(APPROVED);
+        plaResponseMock.setAmount(4000);
+        when(updatePersonalLoanApplicationServiceMock.update(any(), any())).thenReturn(plaResponseMock);
+
+        // When
+        PersonalLoanApplicationRequest plaRequest = new PersonalLoanApplicationRequest();
+        plaRequest.setFirstName("Cliente1");
+        plaRequest.setLastName("Apellido1");
+        plaResponseMock.setStatus(APPROVED);
+        plaRequest.setAmount(4000);
+
+        ResponseEntity<PersonalLoanApplicationResponse> response = personalLoanApplicationController.update(1L, plaRequest);
+
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(plaResponseMock, response.getBody());
+        verify(updatePersonalLoanApplicationServiceMock).update(any(), any());
+        verifyNoMoreInteractions(updatePersonalLoanApplicationServiceMock);
     }
 }

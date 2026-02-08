@@ -6,16 +6,17 @@ import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.OffsetDateTime;
 
 import static com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus.PENDING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doReturn;
 
 /**
  * Test suite for {@link PersonalLoanApplicationMapper}
@@ -23,44 +24,55 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class PersonalLoanApplicationMapperTest {
 
-    @Mock
-    private ModelMapper modelMapperMock;
+    @Spy
+    private ModelMapper modelMapperSpy = new ModelMapper();
 
     @InjectMocks
     private PersonalLoanApplicationMapper personalLoanApplicationMapper;
 
-    public void setUp() {
-        personalLoanApplicationMapper = new PersonalLoanApplicationMapper();
-        ReflectionTestUtils.setField(modelMapperMock, "modelMapper", personalLoanApplicationMapper);
-    }
-
     @Test
     public void mapFromDomainTest() {
         // Given
-        PersonalLoanApplication pla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-        PersonalLoanApplicationResponse expectedResponse = new PersonalLoanApplicationResponse();
-        expectedResponse.setId(1L);
-        expectedResponse.setFirstName("Cliente");
-        expectedResponse.setLastName("Apellido");
-        expectedResponse.setPersonalId("12345678-A");
-        expectedResponse.setAmount(1000);
-        expectedResponse.setBadge("EUR");
-        expectedResponse.setStatus(PENDING);
+        OffsetDateTime now = OffsetDateTime.now();
 
-        when(modelMapperMock.map(any(), eq(PersonalLoanApplicationResponse.class))).thenReturn(expectedResponse);
+        doCallRealMethod().when(modelMapperSpy).typeMap(any(), any());
+
+        PersonalLoanApplicationResponse responseMock = new PersonalLoanApplicationResponse();
+        responseMock.setId(1L);
+        responseMock.setFirstName("Cliente");
+        responseMock.setLastName("Apellido");
+        responseMock.setPersonalId("12345678-A");
+        responseMock.setAmount(1000);
+        responseMock.setBadge("EUR");
+        responseMock.setStatus(PENDING);
+        responseMock.setCreatedAt(now);
+        responseMock.setModifiedAt(now);
+
+        doReturn(responseMock).when(modelMapperSpy).map(any(), any());
 
         // When
+        PersonalLoanApplication pla = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        pla.setId(1L);
+        pla.setStatus(PENDING);
+        pla.setCreatedAt(now);
+        pla.setModifiedAt(now);
+
         PersonalLoanApplicationResponse result = personalLoanApplicationMapper.mapFromDomain(pla);
 
         // Then
-        assertEquals(expectedResponse, result);
-
+        assertEquals(responseMock, result);
     }
 
 
     @Test
     public void mapToDomainTest() {
         // Given
+        doCallRealMethod().when(modelMapperSpy).typeMap(any(), any());
+
+        PersonalLoanApplication domainMock = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
+        doReturn(domainMock).when(modelMapperSpy).map(any(), any());
+
+        // When
         PersonalLoanApplicationRequest request = new PersonalLoanApplicationRequest();
         request.setFirstName("Cliente");
         request.setLastName("Apellido");
@@ -68,15 +80,9 @@ public class PersonalLoanApplicationMapperTest {
         request.setAmount(1000);
         request.setBadge("EUR");
 
-        PersonalLoanApplication expectedDomain = new PersonalLoanApplication("Cliente", "Apellido", "12345678-A", 1000, "EUR");
-
-        when(modelMapperMock.map(any(), eq(PersonalLoanApplication.class))).thenReturn(expectedDomain);
-
-        // When
         PersonalLoanApplication result = personalLoanApplicationMapper.mapToDomain(request);
 
         // Then
-        assertEquals(expectedDomain, result);
-
+        assertEquals(domainMock, result);
     }
 }
