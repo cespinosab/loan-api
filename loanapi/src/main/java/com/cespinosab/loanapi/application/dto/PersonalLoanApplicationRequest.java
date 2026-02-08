@@ -4,6 +4,7 @@ import com.cespinosab.loanapi.domain.model.enums.PersonalLoanApplicationStatus;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 /**
  * Represent the body of a request of /personalLoanApplications endpoint
@@ -91,5 +92,17 @@ public class PersonalLoanApplicationRequest implements Serializable {
 
     public void setModifiedAt(OffsetDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonalLoanApplicationRequest that = (PersonalLoanApplicationRequest) o;
+        return Double.compare(amount, that.amount) == 0 && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(personalId, that.personalId) && Objects.equals(badge, that.badge) && status == that.status && Objects.equals(createdAt, that.createdAt) && Objects.equals(modifiedAt, that.modifiedAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, personalId, amount, badge, status, createdAt, modifiedAt);
     }
 }

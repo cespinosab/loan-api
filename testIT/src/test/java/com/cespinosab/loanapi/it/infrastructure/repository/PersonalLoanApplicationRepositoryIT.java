@@ -29,7 +29,7 @@ public class PersonalLoanApplicationRepositoryIT extends BaseIT {
     PersonalLoanApplicationRepository personalLoanApplicationRepository;
 
     @Test
-    void shouldGetAllIT() throws IOException, InterruptedException {
+    void shouldFindAllIT() throws IOException, InterruptedException {
         // Given
         executeSql("db/existing-loans.sql");
 
@@ -41,7 +41,7 @@ public class PersonalLoanApplicationRepositoryIT extends BaseIT {
     }
 
     @Test
-    void shouldGetByIdIT() throws IOException, InterruptedException {
+    void shouldFindByIdIT() throws IOException, InterruptedException {
         // Given
         executeSql("db/existing-loans.sql");
 

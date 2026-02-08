@@ -10,9 +10,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PersonalLoanApplicationMapper {
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    private ModelMapper modelMapper;
 
     public PersonalLoanApplicationMapper() {
+        this.modelMapper=new ModelMapper();
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setSkipNullEnabled(true);
