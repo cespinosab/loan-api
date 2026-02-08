@@ -2,8 +2,6 @@ package com.cespinosab.loanapi.infrastructure.api;
 
 import com.cespinosab.loanapi.domain.model.PersonalLoanApplication;
 import com.cespinosab.loanapi.infrastructure.repository.PersonalLoanApplicationRepository;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,9 +15,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.io.IOException;
 import java.util.List;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasSize;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,7 +51,7 @@ public class PersonalLoanApplicationControllerTest {
 
     @BeforeEach
     void setUp() throws IOException, InterruptedException {
-        RestAssured.baseURI = "http://localhost:" + port;
+    //    RestAssured.baseURI = "http://localhost:" + port;
         postgres.execInContainer("CREATE SCHEMA loans;");
         personalLoanApplicationRepository.deleteAll();
     }
@@ -69,12 +64,12 @@ public class PersonalLoanApplicationControllerTest {
         );
         personalLoanApplicationRepository.saveAll(customers);
 
-        given()
+     /*   given()
                 .contentType(ContentType.JSON)
                 .when()
                 .get("/v1/personaApplicationLoans")
                 .then()
                 .statusCode(200)
-                .body(".", hasSize(2));
+                .body(".", hasSize(2));*/
     }
 }

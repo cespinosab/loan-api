@@ -4,24 +4,11 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5p %c{1} - %m%n"/>
         </Console>
-
-        <!-- Configuración log para que no crezca infinitamente -->
-        <RollingFile name="RollingFile" fileName="logs/loanapi.log"
-                     filePattern="logs/loanapi-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout>
-                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
-            </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="10 MB" />
-            </Policies>
-        </RollingFile>
     </Appenders>
 
     <Loggers>
-        <!-- Nivel para tu código de dominio y aplicación -->
         <Logger name="com.cespinosab.loanapi" level="debug" additivity="false">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
         </Logger>
 
         <Root level="info">

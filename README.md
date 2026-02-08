@@ -6,7 +6,7 @@ Esta es una API REST para gestionar solicitudes de préstamos personales.
 Para ejecutarla es necesario tener instalado:
 
 * **Java 17** o superior
-* **Maven**
+* **Maven 3.8.7**
 * **Docker** y **Docker Compose**
 
 ### Levantar el entorno de ejecución
@@ -32,6 +32,7 @@ docker compose up --build
 ```
 docker compose down -v
 ```
+
 
 
 ### Dar de alta una nueva solicitud de préstamo personal
@@ -87,9 +88,10 @@ La implementación se organiza en paquetes para proteger la lógica de negocio d
 
 ## Mejoras
 
-- Modificar los test IT para que realmente sean test de integración (mockear los endpoints)
-- Añadir un nuevo módulo testAT que use Cucumber para tener pruebas end-to-end completas. Estos tests están en los tests 
-   IT actualmente y no es su lugar. 
+- Añadir paginación en la obtención del listado de solicitudes.
+- Modificar los test IT para que realmente sean test de integración, actualmente con test E2E, para que sean IT hay mockear los endpoints
+ para que no se ejecute el verdadero método. 
+- Añadir un nuevo módulo testAT que use Cucumber para tener pruebas E2E completas usando Cucumber, 
 - Hacer que le servicio esté securizado usando HTTPS
 - Incluir validaciones relacionadas con la entrada de campos
 - Mejorar la gestión de errores cuando no hay datos, no se puede actualizar una solicitud
