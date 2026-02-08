@@ -10,7 +10,6 @@
         <Logger name="com.cespinosab.loanapi" level="debug" additivity="false">
             <AppenderRef ref="Console" />
         </Logger>
-
         <Root level="info">
             <AppenderRef ref="Console" />
         </Root>

@@ -33,9 +33,39 @@ docker compose up --build
 docker compose down -v
 ```
 
+Existen dos formas de probar la API: usando Swagger o vía curl.
+
+### 1. Swagger
+
+La API cuenta con un Swagger al que se puede acceder a través la URL http://localhost:8080/swagger-ui.html.
+Para ello, solo es necesario abrir un navegador web e introducir la URL indicada.
+
+Aparecerá toda la documentación de la API y para hacer uso de cualquiera de ellos:
+   1. Seleccionar el endpoint deseado
+   2. Pulsar el botón que aparece a la derecha "Try out".
+   3. Rellenar los campos si fuese necesario.
+   4. Pulsar el botón Execute y obtendremos la respuesta de la API. 
 
 
-### Dar de alta una nueva solicitud de préstamo personal
+### 2. Vía curl
+
+Para hacer uso la API vía curl, hay que abrir el terminal y ejecutar uno de los siguientes comandos:
+
+#### GET - Consultar el listado solicitudes de préstamos personales
+
+```
+curl -X GET http://localhost:8080/api/personalLoanApplications
+
+```
+
+#### GET - Consultar una solicitud de préstamos personal sabiendo su ID
+
+```
+curl -X GET http://localhost:8080/api/personalLoanApplications/1
+
+```
+
+#### POST - Dar de alta una nueva solicitud de préstamo personal
 
 ```
 curl -X POST http://localhost:8080/api/personalLoanApplications \
@@ -50,14 +80,7 @@ curl -X POST http://localhost:8080/api/personalLoanApplications \
 
 ```
 
-### Consultar el listado solicitudes de préstamos personales
-
-```
-curl -X GET http://localhost:8080/api/personalLoanApplications
-
-```
-
-### Actualizar una solicitud existente
+#### PUT - Actualizar una solicitud existente
 ```
 curl -X PUT http://localhost:8080/api/personalLoanApplications/3 \
    -H 'Content-type: application/json' \
@@ -71,7 +94,7 @@ curl -X PUT http://localhost:8080/api/personalLoanApplications/3 \
        }'
 ```
 
-## Descripción de la arquitectura
+## Descripción de la Arquitectura
 
 Se ha realizado usando microservicios, arquitectura hexagonal y DDD para garantizar que el sistema cumpla 
 con las reglas del negocio, sea escalable, mantenible y sea fácil de entender entre los equipos técnicos y el negocio. 
@@ -85,6 +108,7 @@ La implementación se organiza en paquetes para proteger la lógica de negocio d
    - application: Casos de uso. Se encuentran los servicios, los mappeadores y los DTO de entrada/salida de la API.
      
    - infrastructure: Implementación técnica. Aquí se define la API con sus controladores y los repositorios JPA.
+
 
 ## Mejoras
 
